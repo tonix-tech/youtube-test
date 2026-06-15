@@ -6,10 +6,14 @@ import VideoGrid from './components/VideoGrid';
 import VideoDetail from './components/VideoDetail';
 import Shorts from './components/Shorts';
 import { VideoProvider, useVideos } from './context/VideoContext';
+import { NotificationProvider } from './context/NotificationContext';
+import SubscriberNotification from './components/SubscriberNotification';
+import { useSubscriberStream } from './hooks/useSubscriberStream';
 import './App.css';
 
 function MainLayout() {
   const { activeVideo, searchQuery } = useVideos();
+  useSubscriberStream(); // Starts the mock stream
 
   return (
     <div className="app-container">
@@ -38,7 +42,10 @@ function MainLayout() {
 function App() {
   return (
     <VideoProvider>
-      <MainLayout />
+      <NotificationProvider>
+        <MainLayout />
+        <SubscriberNotification />
+      </NotificationProvider>
     </VideoProvider>
   );
 }
