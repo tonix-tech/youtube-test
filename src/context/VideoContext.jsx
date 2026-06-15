@@ -1,6 +1,39 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const VideoContext = createContext();
+export const VideoContext = createContext();
+
+const INITIAL_SHORTS = [
+  {
+    id: 's1',
+    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    channelName: 'Speed Racer',
+    channelAvatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=100&h=100&q=80',
+    title: 'Drifting into the weekend like... 🏎️💨 #shorts #racing',
+    likes: 12500,
+    dislikes: 120,
+    commentsCount: 342,
+  },
+  {
+    id: 's2',
+    videoUrl: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+    channelName: 'Tech Meltdown',
+    channelAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80',
+    title: 'When your code compiles on the first try 🤯 #programming',
+    likes: 8400,
+    dislikes: 45,
+    commentsCount: 89,
+  },
+  {
+    id: 's3',
+    videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4',
+    channelName: 'Cinema Shorts',
+    channelAvatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&h=100&q=80',
+    title: 'Epic animation behind the scenes! 🐘✨ #animation #cgi',
+    likes: 45200,
+    dislikes: 300,
+    commentsCount: 1205,
+  }
+];
 
 // Mock Initial Video Data matching screenshot
 const INITIAL_VIDEOS = [
@@ -113,6 +146,7 @@ const INITIAL_COMMENTS = {
 
 export const VideoProvider = ({ children }) => {
   const [videos, setVideos] = useState(INITIAL_VIDEOS);
+  const [shorts, setShorts] = useState(INITIAL_SHORTS);
   const [activeVideo, setActiveVideo] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTag, setActiveTag] = useState('All');
@@ -122,8 +156,9 @@ export const VideoProvider = ({ children }) => {
     new Set(['Tom Scott', 'Mumbo Jumbo', 'Chain Bear', 'Lindybeige'])
   );
 
-  // Manage Likes
+  // Manage Likes/Dislikes
   const [likedVideos, setLikedVideos] = useState(new Set());
+  const [dislikedVideos, setDislikedVideos] = useState(new Set());
 
   // Manage Comments dynamically
   const [comments, setComments] = useState(INITIAL_COMMENTS);
@@ -167,6 +202,54 @@ export const VideoProvider = ({ children }) => {
         setVideos(currentVideos =>
           currentVideos.map(v => v.id === videoId ? { ...v, likes: v.likes + 1 } : v)
         );
+        setShorts(currentShorts =>
+          currentShorts.map(s => s.id === videoId ? { ...s, likes: s.likes + 1 } : s)
+        );
+      }
+      return next;
+    });
+
+    // Remove from dislikes if liked
+    setDislikedVideos(prev => {
+      const next = new Set(prev);
+      if (next.has(videoId)) {
+        next.delete(videoId);
+        setShorts(currentShorts =>
+          currentShorts.map(s => s.id === videoId ? { ...s, dislikes: s.dislikes - 1 } : s)
+        );
+      }
+      return next;
+    });
+  };
+
+  const toggleDislike = (videoId) => {
+    setDislikedVideos(prev => {
+      const next = new Set(prev);
+      if (next.has(videoId)) {
+        next.delete(videoId);
+        setShorts(currentShorts =>
+          currentShorts.map(s => s.id === videoId ? { ...s, dislikes: s.dislikes - 1 } : s)
+        );
+      } else {
+        next.add(videoId);
+        setShorts(currentShorts =>
+          currentShorts.map(s => s.id === videoId ? { ...s, dislikes: s.dislikes + 1 } : s)
+        );
+      }
+      return next;
+    });
+
+    // Remove from likes if disliked
+    setLikedVideos(prev => {
+      const next = new Set(prev);
+      if (next.has(videoId)) {
+        next.delete(videoId);
+        setVideos(currentVideos =>
+          currentVideos.map(v => v.id === videoId ? { ...v, likes: v.likes - 1 } : v)
+        );
+        setShorts(currentShorts =>
+          currentShorts.map(s => s.id === videoId ? { ...s, likes: s.likes - 1 } : s)
+        );
       }
       return next;
     });
@@ -205,9 +288,13 @@ export const VideoProvider = ({ children }) => {
       toggleSubscribe,
       likedVideos,
       toggleLike,
+      dislikedVideos,
+      toggleDislike,
       comments,
       addComment,
-      filteredVideos: getFilteredVideos()
+      filteredVideos: getFilteredVideos(),
+      shorts,
+      setShorts
     }}>
       {children}
     </VideoContext.Provider>
