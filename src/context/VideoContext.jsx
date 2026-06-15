@@ -5,32 +5,6 @@ const VideoContext = createContext();
 // Mock Initial Video Data matching screenshot
 const INITIAL_VIDEOS = [
   {
-    id: 'tV5R3B_B55w',
-    title: 'Why progress bars dont move smoothly',
-    duration: '5:11',
-    thumbnail: 'https://img.youtube.com/vi/tV5R3B_B55w/maxresdefault.jpg',
-    channelName: 'Tom Scott',
-    channelAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80',
-    views: '2.4M views',
-    publishedTime: '3 years ago',
-    likes: 184000,
-    category: 'Computers',
-    description: 'Why do progress bars halt, skip, jump, or get stuck at 99%? It turns out predicting the future is hard, especially when computers are involved.'
-  },
-  {
-    id: 'kYF5w2E_4x0',
-    title: 'Gladiators - Fighting to impress the mob',
-    duration: '1:50:02',
-    thumbnail: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?auto=format&fit=crop&w=800&q=80', // Gladiator theme fallback
-    channelName: 'Lindybeige',
-    channelAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&h=100&q=80',
-    views: '890K views',
-    publishedTime: '1 year ago',
-    likes: 42000,
-    category: 'History',
-    description: 'Did Roman gladiators actually fight to the death? How did they train, and what was their role in Roman politics and entertainment?'
-  },
-  {
     id: '2PdB4LoqDvE',
     title: 'What if Minecraft was mechanical?',
     duration: '15:32',
@@ -44,10 +18,10 @@ const INITIAL_VIDEOS = [
     description: 'Today, we look at what would happen if Minecraft blocks followed mechanical engineering rules. Gears, pistons, and fully automated machinery.'
   },
   {
-    id: 'Hx7Sr2ZTqcI',
+    id: 'FaILnmUYS_U',
     title: 'Creating my own OS to run Tetris',
     duration: '22:37',
-    thumbnail: 'https://img.youtube.com/vi/Hx7Sr2ZTqcI/maxresdefault.jpg',
+    thumbnail: 'https://img.youtube.com/vi/FaILnmUYS_U/maxresdefault.jpg',
     channelName: 'jdh',
     channelAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80',
     views: '1.7M views',
@@ -57,17 +31,17 @@ const INITIAL_VIDEOS = [
     description: 'Writing an entire operating system in assembly and C from scratch with the sole purpose of playing Tetris. No bootloaders, no standard libraries.'
   },
   {
-    id: 'y1K_R8w6eY0',
-    title: 'The race so fast Drivers blacked out!',
-    duration: '8:30',
-    thumbnail: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80', // Racing fallback
-    channelName: 'Formula 1',
+    id: 'WOZgEvJbnlc',
+    title: 'F1 Aerodynamics - 1: The Basics',
+    duration: '7:57',
+    thumbnail: 'https://img.youtube.com/vi/WOZgEvJbnlc/maxresdefault.jpg',
+    channelName: 'Chain Bear',
     channelAvatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=100&h=100&q=80',
-    views: '5.2M views',
-    publishedTime: '5 days ago',
-    likes: 290000,
+    views: '1.1M views',
+    publishedTime: '4 years ago',
+    likes: 41000,
     category: 'Formula 1',
-    description: 'What happened when racecars pulled so many Gs that professional drivers began losing consciousness? Investigating the limits of human physiology in motorsports.'
+    description: 'How do aerodynamics work on a Formula 1 car? Exploring downforce, wings, and how air flows around the vehicle to generate grip.'
   },
   {
     id: 'oBt53YbR9Kk',
@@ -83,23 +57,23 @@ const INITIAL_VIDEOS = [
     description: 'An in-depth, interactive course on dynamic programming. Master memoization and tabulation techniques with practical algorithmic examples.'
   },
   {
-    id: 'A8eLpL2h1e0',
-    title: 'INSIDE STORY: Ocons first win in Hungary',
-    duration: '20:03',
-    thumbnail: 'https://img.youtube.com/vi/A8eLpL2h1e0/maxresdefault.jpg',
-    channelName: 'Formula 1',
+    id: 'r5pFyBHO8Fk',
+    title: 'F1 Aerodynamics - 2: Turbulence, Drag & Vortices',
+    duration: '8:55',
+    thumbnail: 'https://img.youtube.com/vi/r5pFyBHO8Fk/maxresdefault.jpg',
+    channelName: 'Chain Bear',
     channelAvatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=100&h=100&q=80',
-    views: '1.2M views',
-    publishedTime: '2 years ago',
-    likes: 84000,
+    views: '890K views',
+    publishedTime: '3 years ago',
+    likes: 32000,
     category: 'Formula 1',
-    description: 'How Esteban Ocon and Alpine pulled off an incredible, history-making victory at the thrilling 2021 Hungarian Grand Prix.'
+    description: 'What is turbulence and how does it affect the drag on a Formula 1 car? Stuart Taylor explains drag, wake, and aerodynamic design in F1.'
   },
   {
-    id: 'k429m1r2k4U',
+    id: 'nej-5GhPqtw',
     title: 'How GOTYE created a song we used to know',
     duration: '10:49',
-    thumbnail: 'https://img.youtube.com/vi/k429m1r2k4U/maxresdefault.jpg',
+    thumbnail: 'https://img.youtube.com/vi/nej-5GhPqtw/maxresdefault.jpg',
     channelName: 'Middle 8',
     channelAvatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=100&h=100&q=80',
     views: '920K views',
@@ -109,10 +83,10 @@ const INITIAL_VIDEOS = [
     description: 'An analysis of Gotyes mega-hit "Somebody That I Used To Know", its composition, the sample usage, and why it became an international phenomenon.'
   },
   {
-    id: 'd2G-5scrvAU',
+    id: 'RzWB5jL5RX0',
     title: 'Cracking Enigma in 2021',
     duration: '22:15',
-    thumbnail: 'https://img.youtube.com/vi/d2G-5scrvAU/maxresdefault.jpg',
+    thumbnail: 'https://img.youtube.com/vi/RzWB5jL5RX0/maxresdefault.jpg',
     channelName: 'Computerphile',
     channelAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80',
     views: '1.1M views',
@@ -125,11 +99,11 @@ const INITIAL_VIDEOS = [
 
 // Seed comments for all videos
 const INITIAL_COMMENTS = {
-  'tV5R3B_B55w': [
+  'oCL8h9J_z7I': [
     { id: 1, author: 'Sarah Chen', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=50&h=50&q=80', text: 'This is the clearest explanation of the progress bar problem I have ever seen! Tom Scott does it again.', time: '2 days ago', likes: 342 },
     { id: 2, author: 'John Doe', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=50&h=50&q=80', text: 'Always wondered why Windows installs spend 90% of the time sitting at 99%. Now I finally know!', time: '1 week ago', likes: 118 }
   ],
-  'kYF5w2E_4x0': [
+  'Gq5-V9Q5Cq0': [
     { id: 1, author: 'Marcus Aurelius', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=50&h=50&q=80', text: 'Stunning historical detail. Lindybeige has such an engaging storytelling style.', time: '3 months ago', likes: 215 }
   ],
   '2PdB4LoqDvE': [
@@ -145,7 +119,7 @@ export const VideoProvider = ({ children }) => {
   
   // Manage Subscriptions
   const [subscribedChannels, setSubscribedChannels] = useState(
-    new Set(['Tom Scott', 'Mumbo Jumbo', 'Formula 1', 'Lindybeige'])
+    new Set(['Tom Scott', 'Mumbo Jumbo', 'Chain Bear', 'Lindybeige'])
   );
 
   // Manage Likes

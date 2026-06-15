@@ -13,11 +13,12 @@ export default function VideoCard({ video }) {
     <div className="video-card" onClick={handleCardClick} id={`video-card-${video.id}`}>
       <div className="thumbnail-container">
         <img 
-          src={video.thumbnail} 
-          alt={video.title} 
-          className="thumbnail-img" 
-          loading="lazy"
-        />
+  src={video.thumbnail} 
+  alt={video.title} 
+  className="thumbnail-img" 
+  loading="lazy"
+  onError={(e) => { e.target.src = 'https://via.placeholder.com/480x360?text=No+Thumbnail'; }}
+/>
         <span className="video-duration">{video.duration}</span>
       </div>
       
