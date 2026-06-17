@@ -42,7 +42,17 @@ export default function Library() {
           <div className="library-profile-meta">
             <span className="library-profile-handle">@Tonix_aep7</span>
             <span className="library-profile-dot">•</span>
-            <a href="#" className="library-view-channel">View channel</a>
+            <a 
+              href="#" 
+              className="library-view-channel"
+              onClick={(e) => {
+                e.preventDefault();
+                setActivePage('channel');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
+              View channel
+            </a>
           </div>
           <div className="library-profile-actions">
             <button className="library-profile-btn">
