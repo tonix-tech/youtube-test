@@ -10,6 +10,8 @@ export default function Sidebar() {
     setSearchQuery, 
     activeTag, 
     setActiveTag,
+    activePage,
+    setActivePage,
     subscribedChannels,
     videos
   } = useVideos();
@@ -18,6 +20,7 @@ export default function Sidebar() {
     setSearchQuery('');
     setActiveTag('All');
     setActiveVideo(null);
+    setActivePage('home');
   };
 
   // Get list of unique channels the user is subscribed to with their details
@@ -54,8 +57,8 @@ export default function Sidebar() {
         </button>
 
         <button 
-          onClick={() => { setSearchQuery('shorts'); setActiveVideo(null); }} 
-          className={`sidebar-link ${searchQuery === 'shorts' ? 'active' : ''}`}
+          onClick={() => { setSearchQuery('shorts'); setActiveVideo(null); setActivePage('home'); }} 
+          className={`sidebar-link ${searchQuery === 'shorts' && activePage === 'home' ? 'active' : ''}`}
           aria-label="Shorts"
         >
           <Compass size={22} />
@@ -63,7 +66,7 @@ export default function Sidebar() {
         </button>
 
         <button 
-          onClick={() => { setSearchQuery(''); setActiveTag('All'); setActiveVideo(null); }}
+          onClick={() => { setSearchQuery(''); setActiveTag('All'); setActiveVideo(null); setActivePage('home'); }}
           className="sidebar-link"
           aria-label="Subscriptions"
         >
@@ -73,7 +76,11 @@ export default function Sidebar() {
 
         <div className="sidebar-divider"></div>
 
-        <button className="sidebar-link" aria-label="Library">
+        <button 
+          onClick={() => { setActivePage('library'); setActiveVideo(null); }} 
+          className={`sidebar-link ${activePage === 'library' ? 'active' : ''}`}
+          aria-label="Library"
+        >
           <Folder size={22} />
           <span>Library</span>
         </button>

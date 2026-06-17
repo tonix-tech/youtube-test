@@ -4,11 +4,12 @@ import Sidebar from './components/Sidebar';
 import TagsRow from './components/TagsRow';
 import VideoGrid from './components/VideoGrid';
 import VideoDetail from './components/VideoDetail';
+import Library from './components/Library';
 import { VideoProvider, useVideos } from './context/VideoContext';
 import './App.css';
 
 function MainLayout() {
-  const { activeVideo } = useVideos();
+  const { activeVideo, activePage } = useVideos();
 
   return (
     <div className="app-container">
@@ -16,7 +17,9 @@ function MainLayout() {
       <div style={{ display: 'flex', flex: 1 }}>
         <Sidebar />
         <main className="main-wrapper">
-          {activeVideo ? (
+          {activePage === 'library' ? (
+            <Library />
+          ) : activeVideo ? (
             <VideoDetail />
           ) : (
             <>
