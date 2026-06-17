@@ -332,7 +332,7 @@ body {
 /* Tags Row Styles */
 .tags-container {
   position: sticky;
-  top: 56px;
+  top: 0;
   background-color: var(--bg-primary);
   padding: 12px 24px;
   z-index: 800;

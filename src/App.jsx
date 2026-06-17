@@ -5,24 +5,22 @@ import TagsRow from './components/TagsRow';
 import VideoGrid from './components/VideoGrid';
 import VideoDetail from './components/VideoDetail';
 import Library from './components/Library';
+import Shorts from './components/Shorts';
 import { VideoProvider, useVideos } from './context/VideoContext';
 import './App.css';
 
 function MainLayout() {
-  const { activeVideo, activePage } = useVideos();
-  const { activeVideo, searchQuery } = useVideos();
+  const { activeVideo, activePage, searchQuery } = useVideos();
 
   return (
     <div className="app-container">
       <Header />
       <div style={{ display: 'flex', flex: 1 }}>
         <Sidebar />
-        <main className="main-wrapper">
+        <main className="main-wrapper" style={{ height: searchQuery === 'shorts' ? 'calc(100vh - 56px)' : 'auto', overflow: searchQuery === 'shorts' ? 'hidden' : 'auto' }}>
           {activePage === 'library' ? (
             <Library />
           ) : activeVideo ? (
-        <main className="main-wrapper" style={{ height: searchQuery === 'shorts' ? 'calc(100vh - 56px)' : 'auto', overflow: searchQuery === 'shorts' ? 'hidden' : 'auto' }}>
-          {activeVideo ? (
             <VideoDetail />
           ) : searchQuery === 'shorts' ? (
             <Shorts />

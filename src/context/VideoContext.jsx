@@ -328,7 +328,6 @@ export const VideoProvider = ({ children }) => {
       watchHistory,
       watchLater,
       setWatchLater,
-      filteredVideos: getFilteredVideos()
       filteredVideos: getFilteredVideos(),
       shorts,
       setShorts,
