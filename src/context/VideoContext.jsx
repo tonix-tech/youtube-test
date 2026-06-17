@@ -156,6 +156,7 @@ export const VideoProvider = ({ children }) => {
   const [activeVideo, setActiveVideo] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTag, setActiveTag] = useState('All');
+  const [activePage, setActivePage] = useState('home');
   const [history, setHistory] = useState([]);
   
   // Manage Subscriptions
@@ -166,6 +167,12 @@ export const VideoProvider = ({ children }) => {
   // Manage Likes/Dislikes
   const [likedVideos, setLikedVideos] = useState(new Set());
   const [dislikedVideos, setDislikedVideos] = useState(new Set());
+
+  // Watch history (simulated — use first 4 videos)
+  const [watchHistory] = useState(INITIAL_VIDEOS.slice(0, 4));
+
+  // Watch Later list
+  const [watchLater, setWatchLater] = useState([INITIAL_VIDEOS[2], INITIAL_VIDEOS[5]]);
 
   // Manage Comments dynamically
   const [comments, setComments] = useState(INITIAL_COMMENTS);
@@ -308,6 +315,8 @@ export const VideoProvider = ({ children }) => {
       setSearchQuery,
       activeTag,
       setActiveTag,
+      activePage,
+      setActivePage,
       subscribedChannels,
       toggleSubscribe,
       likedVideos,
@@ -316,6 +325,10 @@ export const VideoProvider = ({ children }) => {
       toggleDislike,
       comments,
       addComment,
+      watchHistory,
+      watchLater,
+      setWatchLater,
+      filteredVideos: getFilteredVideos()
       filteredVideos: getFilteredVideos(),
       shorts,
       setShorts,
