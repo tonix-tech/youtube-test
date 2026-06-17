@@ -3,14 +3,19 @@ import { useNotification } from '../context/NotificationContext';
 import './SubscriberNotification.css';
 
 const SubscriberNotification = () => {
-  const { notifications } = useNotification();
+  const { activeNotifications, setSelectedSubscriber } = useNotification();
 
-  if (notifications.length === 0) return null;
+  if (activeNotifications.length === 0) return null;
 
   return (
     <div className="subscriber-notification-container">
-      {notifications.map((notif) => (
-        <div key={notif.id} className="subscriber-notification animate-slide-in">
+      {activeNotifications.map((notif) => (
+        <div 
+          key={notif.id} 
+          className="subscriber-notification animate-slide-in"
+          onClick={() => setSelectedSubscriber(notif)}
+          style={{ cursor: 'pointer' }}
+        >
           <img src={notif.profilePicture} alt={`${notif.name}'s avatar`} className="subscriber-avatar" />
           <div className="subscriber-info">
             <span className="subscriber-name">{notif.name}</span>

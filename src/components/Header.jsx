@@ -1,10 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Menu, Search, Video, Grid, Bell } from 'lucide-react';
 import { useVideos } from '../context/VideoContext';
-
+import { useNotification } from '../context/NotificationContext';
 export default function Header() {
   const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag } = useVideos();
+  const { notificationHistory, unreadCount, markAsRead, setSelectedSubscriber } = useNotification();
   const [localSearch, setLocalSearch] = useState(searchQuery);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const notifRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setIsNotifOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleNotifClick = () => {
+    setSearchQuery('notifications');
+    setActiveVideo(null);
+    if (unreadCount > 0) {
+      markAsRead();
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,9 +86,9 @@ export default function Header() {
         <button className="icon-btn" aria-label="YouTube apps">
           <Grid size={20} />
         </button>
-        <button className="icon-btn" aria-label="Notifications">
+        <button className="icon-btn" aria-label="Notifications" onClick={handleNotifClick}>
           <Bell size={20} />
-          <span className="badge">3</span>
+          {unreadCount > 0 && <span className="badge">{unreadCount > 9 ? '9+' : unreadCount}</span>}
         </button>
         <div className="profile-avatar" title="Your Profile" id="profile-btn">
           S

@@ -8,6 +8,8 @@ import Shorts from './components/Shorts';
 import { VideoProvider, useVideos } from './context/VideoContext';
 import { NotificationProvider } from './context/NotificationContext';
 import SubscriberNotification from './components/SubscriberNotification';
+import SubscriberModal from './components/SubscriberModal';
+import NotificationsPage from './components/NotificationsPage';
 import { useSubscriberStream } from './hooks/useSubscriberStream';
 import './App.css';
 
@@ -25,6 +27,8 @@ function MainLayout() {
             <VideoDetail />
           ) : searchQuery === 'shorts' ? (
             <Shorts />
+          ) : searchQuery === 'notifications' ? (
+            <NotificationsPage />
           ) : (
             <>
               <TagsRow />
@@ -45,6 +49,7 @@ function App() {
       <NotificationProvider>
         <MainLayout />
         <SubscriberNotification />
+        <SubscriberModal />
       </NotificationProvider>
     </VideoProvider>
   );

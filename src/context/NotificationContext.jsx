@@ -3,29 +3,46 @@ import React, { createContext, useState, useContext, useCallback, useRef } from 
 const NotificationContext = createContext();
 
 export function NotificationProvider({ children }) {
-  const [notifications, setNotifications] = useState([]);
+  const [activeNotifications, setActiveNotifications] = useState([]);
+  const [notificationHistory, setNotificationHistory] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [selectedSubscriber, setSelectedSubscriber] = useState(null);
   const notificationIdCounter = useRef(0);
 
   const triggerNotification = useCallback((data) => {
     const id = notificationIdCounter.current++;
     
     // Play sound immediately when notification is triggered
-    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'); // A nice pleasant bell ding
+    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'); 
     audio.volume = 0.5;
     audio.play().catch(e => console.error('Audio play failed', e));
 
-    const newNotification = { id, ...data };
+    const newNotification = { id, timestamp: new Date(), ...data };
     
-    setNotifications((prev) => [...prev, newNotification]);
+    setActiveNotifications((prev) => [...prev, newNotification]);
+    setNotificationHistory((prev) => [newNotification, ...prev]);
+    setUnreadCount((prev) => prev + 1);
 
-    // Automatically remove the notification after 5 seconds
+    // Automatically remove the notification from active screen after 5.5 seconds 
     setTimeout(() => {
-      setNotifications((prev) => prev.filter((n) => n.id !== id));
-    }, 5000);
+      setActiveNotifications((prev) => prev.filter((n) => n.id !== id));
+    }, 5500);
+  }, []);
+
+  const markAsRead = useCallback(() => {
+    setUnreadCount(0);
   }, []);
 
   return (
-    <NotificationContext.Provider value={{ notifications, triggerNotification }}>
+    <NotificationContext.Provider value={{ 
+      activeNotifications, 
+      notificationHistory, 
+      unreadCount, 
+      selectedSubscriber,
+      setSelectedSubscriber,
+      triggerNotification, 
+      markAsRead 
+    }}>
       {children}
     </NotificationContext.Provider>
   );

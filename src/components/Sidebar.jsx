@@ -83,7 +83,11 @@ export default function Sidebar() {
           <span>History</span>
         </button>
 
-        <button className="sidebar-link" aria-label="Watch Later">
+        <button 
+          onClick={() => { setSearchQuery('watch_later'); setActiveVideo(null); }}
+          className={`sidebar-link ${searchQuery === 'watch_later' ? 'active' : ''}`} 
+          aria-label="Watch Later"
+        >
           <Clock size={22} />
           <span>Watch Later</span>
         </button>

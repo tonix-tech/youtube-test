@@ -19,8 +19,7 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
   min-width: 280px;
   will-change: transform, opacity;
-  animation: slideInBottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
-             fadeOutBottom 0.5s ease-in 4.5s forwards;
+  animation: notificationSequence 5s forwards;
   pointer-events: auto;
   border-left: 4px solid #ff0000;
 }
@@ -67,25 +66,31 @@
   transform-origin: top center;
 }
 
-@keyframes slideInBottom {
+@keyframes notificationSequence {
   0% {
     opacity: 0;
     transform: translateY(50px) scale(0.9);
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
-  100% {
+  10% {
     opacity: 1;
     transform: translateY(0) scale(1);
+    animation-timing-function: linear;
   }
-}
-
-@keyframes fadeOutBottom {
-  0% {
+  84% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate(0, 0) scale(1);
+    animation-timing-function: ease-out;
+  }
+  88% {
+    opacity: 1;
+    transform: translate(10px, -10px) scale(1.05);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   100% {
     opacity: 0;
-    transform: translateY(20px) scale(0.9);
+    /* Flies to the top right corner where the bell is located */
+    transform: translate(calc(100vw - 320px), calc(-100vh + 100px)) scale(0.1);
   }
 }
 
