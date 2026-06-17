@@ -85,7 +85,11 @@ export default function Sidebar() {
           <span>Library</span>
         </button>
 
-        <button className="sidebar-link" aria-label="History">
+        <button 
+          onClick={() => { setSearchQuery('__history__'); setActiveTag('All'); setActiveVideo(null); }}
+          className={`sidebar-link ${searchQuery === '__history__' ? 'active' : ''}`}
+          aria-label="History"
+        >
           <History size={22} />
           <span>History</span>
         </button>

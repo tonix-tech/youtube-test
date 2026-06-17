@@ -10,6 +10,7 @@ import './App.css';
 
 function MainLayout() {
   const { activeVideo, activePage } = useVideos();
+  const { activeVideo, searchQuery } = useVideos();
 
   return (
     <div className="app-container">
@@ -20,10 +21,14 @@ function MainLayout() {
           {activePage === 'library' ? (
             <Library />
           ) : activeVideo ? (
+        <main className="main-wrapper" style={{ height: searchQuery === 'shorts' ? 'calc(100vh - 56px)' : 'auto', overflow: searchQuery === 'shorts' ? 'hidden' : 'auto' }}>
+          {activeVideo ? (
             <VideoDetail />
+          ) : searchQuery === 'shorts' ? (
+            <Shorts />
           ) : (
             <>
-              <TagsRow />
+              {searchQuery !== '__history__' && <TagsRow />}
               <div className="video-content-area">
                 <VideoGrid />
               </div>
