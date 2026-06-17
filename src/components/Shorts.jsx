@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ThumbsUp, ThumbsDown, MessageSquare, Share2, MoreVertical, Play, Pause, Volume2, VolumeX, FastForward, X } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageSquare, Share2, MoreVertical, Play, Volume2, VolumeX, FastForward, X, ArrowLeft, Search, Camera, Repeat, Disc } from 'lucide-react';
 import { useVideos } from '../context/VideoContext';
 import './Shorts.css';
 
 export default function Shorts() {
-  const { shorts, likedVideos, dislikedVideos, toggleLike, toggleDislike, comments, addComment, subscribedChannels, toggleSubscribe } = useVideos();
+  const { shorts, likedVideos, dislikedVideos, toggleLike, toggleDislike, comments, addComment, subscribedChannels, toggleSubscribe, addToHistory } = useVideos();
   const [activeShortId, setActiveShortId] = useState(shorts[0]?.id);
   
   const containerRef = useRef(null);
@@ -30,6 +30,15 @@ export default function Shorts() {
     };
   }, [shorts]);
 
+  useEffect(() => {
+    if (addToHistory && activeShortId) {
+      const activeShort = shorts.find(s => s.id === activeShortId);
+      if (activeShort) {
+        addToHistory(activeShort);
+      }
+    }
+  }, [activeShortId, shorts, addToHistory]);
+
   return (
     <div className="shorts-container" ref={containerRef}>
       {shorts.map((short) => (
@@ -54,7 +63,7 @@ export default function Shorts() {
 function ShortVideo({ short, isActive, isLiked, isDisliked, onLike, onDislike, comments, onAddComment, isSubscribed, onSubscribe }) {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // Must be true for autoplay to work in browsers
   const [playbackRate, setPlaybackRate] = useState(1);
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
@@ -167,22 +176,59 @@ function ShortVideo({ short, isActive, isLiked, isDisliked, onLike, onDislike, c
           loop
           muted={isMuted}
           playsInline
+          autoPlay={isActive}
+          preload="auto"
         />
         
-        {/* Top Controls */}
-        <div className="short-top-controls">
-          <button className="short-control-btn" onClick={toggleMute}>
-            {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
-          </button>
-          {!isPlaying && (
-            <div className="short-play-indicator">
-              <Play size={48} fill="white" />
-            </div>
-          )}
+        {/* Top Navigation */}
+        <div className="short-top-nav">
+          <div className="short-top-nav-left">
+            <ArrowLeft size={24} />
+            <span className="short-top-nav-title">Shorts</span>
+          </div>
+          <div className="short-top-nav-right">
+            <Search size={24} />
+            <Camera size={24} />
+            <MoreVertical size={24} />
+          </div>
         </div>
+
+        {/* Mute Toggle Button */}
+        <button 
+          className="short-mute-btn" 
+          onClick={toggleMute}
+          style={{
+            position: 'absolute',
+            top: '70px',
+            right: '16px',
+            background: 'rgba(0, 0, 0, 0.6)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'white',
+            cursor: 'pointer',
+            zIndex: 15
+          }}
+        >
+          {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+        </button>
+
+        {!isPlaying && (
+          <div className="short-play-indicator">
+            <Play size={48} fill="white" />
+          </div>
+        )}
 
         {/* Bottom Info Overlay */}
         <div className="short-info-overlay">
+          <button className="short-super-thanks">
+            <span style={{ fontSize: '14px', marginRight: '6px' }}>🤍</span>
+            Super Thanks kaufen
+          </button>
           <div className="short-channel-info">
             <img src={short.channelAvatar} alt={short.channelName} className="short-channel-avatar" />
             <span className="short-channel-name">@{short.channelName}</span>
