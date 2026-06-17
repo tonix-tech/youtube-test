@@ -12,6 +12,8 @@ const INITIAL_SHORTS = [
     likes: 12500,
     dislikes: 120,
     commentsCount: 342,
+    thumbnail: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
+    duration: '0:15',
   },
   {
     id: 's2',
@@ -22,16 +24,20 @@ const INITIAL_SHORTS = [
     likes: 8400,
     dislikes: 45,
     commentsCount: 89,
+    thumbnail: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg',
+    duration: '0:42',
   },
   {
     id: 's3',
-    videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4',
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
     channelName: 'Cinema Shorts',
     channelAvatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&h=100&q=80',
     title: 'Epic animation behind the scenes! 🐘✨ #animation #cgi',
     likes: 45200,
     dislikes: 300,
     commentsCount: 1205,
+    thumbnail: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg',
+    duration: '0:59',
   }
 ];
 
@@ -150,6 +156,7 @@ export const VideoProvider = ({ children }) => {
   const [activeVideo, setActiveVideo] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTag, setActiveTag] = useState('All');
+  const [history, setHistory] = useState([]);
   
   // Manage Subscriptions
   const [subscribedChannels, setSubscribedChannels] = useState(
@@ -163,8 +170,25 @@ export const VideoProvider = ({ children }) => {
   // Manage Comments dynamically
   const [comments, setComments] = useState(INITIAL_COMMENTS);
 
+  const addToHistory = (item) => {
+    if (!item) return;
+    setHistory(prev => {
+      const next = prev.filter(v => v.id !== item.id);
+      return [{ ...item, isShort: !!item.videoUrl }, ...next];
+    });
+  };
+
+  useEffect(() => {
+    if (activeVideo) {
+      addToHistory(activeVideo);
+    }
+  }, [activeVideo]);
+
   // Filtered Video Selector
   const getFilteredVideos = () => {
+    if (searchQuery === '__history__') {
+      return history;
+    }
     return videos.filter(video => {
       const matchesSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             video.channelName.toLowerCase().includes(searchQuery.toLowerCase());
@@ -294,7 +318,8 @@ export const VideoProvider = ({ children }) => {
       addComment,
       filteredVideos: getFilteredVideos(),
       shorts,
-      setShorts
+      setShorts,
+      addToHistory
     }}>
       {children}
     </VideoContext.Provider>
