@@ -9,9 +9,16 @@ import Channel from './components/Channel';
 import Shorts from './components/Shorts';
 import AuthPage from './components/AuthPage';
 import { VideoProvider, useVideos } from './context/VideoContext';
+import { NotificationProvider } from './context/NotificationContext';
+import SubscriberNotification from './components/SubscriberNotification';
+import SubscriberModal from './components/SubscriberModal';
+import NotificationsPage from './components/NotificationsPage';
+import { useSubscriberStream } from './hooks/useSubscriberStream';
 import './App.css';
 
 function MainLayout() {
+  const { activeVideo, searchQuery } = useVideos();
+  useSubscriberStream(); // Starts the mock stream
   const { activeVideo, activePage, searchQuery } = useVideos();
 
   if (activePage === 'auth') {
@@ -32,6 +39,8 @@ function MainLayout() {
             <VideoDetail />
           ) : searchQuery === 'shorts' ? (
             <Shorts />
+          ) : searchQuery === 'notifications' ? (
+            <NotificationsPage />
           ) : (
             <>
               {!searchQuery.startsWith('__') && <TagsRow />}
@@ -49,7 +58,11 @@ function MainLayout() {
 function App() {
   return (
     <VideoProvider>
-      <MainLayout />
+      <NotificationProvider>
+        <MainLayout />
+        <SubscriberNotification />
+        <SubscriberModal />
+      </NotificationProvider>
     </VideoProvider>
   );
 }

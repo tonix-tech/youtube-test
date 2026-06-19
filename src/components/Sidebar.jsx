@@ -79,6 +79,30 @@ export default function Sidebar() {
           <span>Subscriptions</span>
         </button>
 
+        <div className="sidebar-divider"></div>
+
+        <button className="sidebar-link" aria-label="Library">
+          <Folder size={22} />
+          <span>Library</span>
+        </button>
+
+        <button className="sidebar-link" aria-label="History">
+          <History size={22} />
+          <span>History</span>
+        </button>
+
+        <button 
+          onClick={() => { setSearchQuery('watch_later'); setActiveVideo(null); }}
+          className={`sidebar-link ${searchQuery === 'watch_later' ? 'active' : ''}`} 
+          aria-label="Watch Later"
+        >
+          <Clock size={22} />
+          <span>Watch Later</span>
+        </button>
+
+        <button className="sidebar-link" aria-label="Liked Videos">
+          <ThumbsUp size={22} />
+          <span>Liked</span>
         <button 
           onClick={() => { setActivePage('library'); setActiveVideo(null); setSidebarOpen(false); }} 
           className={`sidebar-link ${activePage === 'library' ? 'active' : ''}`}

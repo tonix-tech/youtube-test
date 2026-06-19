@@ -1,0 +1,101 @@
+.subscriber-notification-container {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 9999;
+  pointer-events: none; /* Let clicks pass through */
+}
+
+.subscriber-notification {
+  display: flex;
+  align-items: center;
+  background-color: #0f0f0f;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  min-width: 280px;
+  will-change: transform, opacity;
+  animation: notificationSequence 5s forwards;
+  pointer-events: auto;
+  border-left: 4px solid #ff0000;
+}
+
+.subscriber-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.subscriber-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.subscriber-name {
+  font-family: 'Roboto', 'Arial', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #f1f1f1;
+}
+
+.subscriber-action {
+  font-family: 'Roboto', 'Arial', sans-serif;
+  font-size: 13px;
+  color: #aaaaaa;
+  margin-top: 2px;
+}
+
+.subscriber-bell-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ff0000;
+  margin-left: 12px;
+  animation: bellRing 1s ease-in-out 0.5s;
+  transform-origin: top center;
+}
+
+@keyframes notificationSequence {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation-timing-function: linear;
+  }
+  84% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+    animation-timing-function: ease-out;
+  }
+  88% {
+    opacity: 1;
+    transform: translate(10px, -10px) scale(1.05);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  100% {
+    opacity: 0;
+    /* Flies to the top right corner where the bell is located */
+    transform: translate(calc(100vw - 320px), calc(-100vh + 100px)) scale(0.1);
+  }
+}
+
+@keyframes bellRing {
+  0%, 100% { transform: rotate(0deg); }
+  10%, 30%, 50%, 70%, 90% { transform: rotate(10deg); }
+  20%, 40%, 60%, 80% { transform: rotate(-10deg); }
+}

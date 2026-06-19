@@ -210,6 +210,13 @@ export const VideoProvider = ({ children }) => {
   // Manage Comments dynamically
   const [comments, setComments] = useState(INITIAL_COMMENTS);
 
+  // Manage Watch Later
+  const [watchLaterVideos, setWatchLaterVideos] = useState(new Set());
+
+  // Filtered Video Selector
+  const getFilteredVideos = () => {
+    if (searchQuery === 'watch_later') {
+      return videos.filter(video => watchLaterVideos.has(video.id));
   const addToHistory = useCallback((item) => {
     if (!item) return;
     setHistory(prev => {
@@ -345,6 +352,19 @@ export const VideoProvider = ({ children }) => {
     });
   };
 
+  // Toggle Watch Later
+  const toggleWatchLater = (videoId) => {
+    setWatchLaterVideos(prev => {
+      const next = new Set(prev);
+      if (next.has(videoId)) {
+        next.delete(videoId);
+      } else {
+        next.add(videoId);
+      }
+      return next;
+    });
+  };
+
   return (
     <VideoContext.Provider value={{
       videos,
@@ -364,6 +384,8 @@ export const VideoProvider = ({ children }) => {
       toggleDislike,
       comments,
       addComment,
+      watchLaterVideos,
+      toggleWatchLater,
       watchHistory,
       watchLater,
       setWatchLater,
