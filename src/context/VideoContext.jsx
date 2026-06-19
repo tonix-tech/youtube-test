@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 export const VideoContext = createContext();
 
@@ -12,6 +12,8 @@ const INITIAL_SHORTS = [
     likes: 12500,
     dislikes: 120,
     commentsCount: 342,
+    thumbnail: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
+    duration: '0:15',
   },
   {
     id: 's2',
@@ -22,16 +24,20 @@ const INITIAL_SHORTS = [
     likes: 8400,
     dislikes: 45,
     commentsCount: 89,
+    thumbnail: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg',
+    duration: '0:42',
   },
   {
     id: 's3',
-    videoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4',
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
     channelName: 'Cinema Shorts',
     channelAvatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&h=100&q=80',
     title: 'Epic animation behind the scenes! 🐘✨ #animation #cgi',
     likes: 45200,
     dislikes: 300,
     commentsCount: 1205,
+    thumbnail: 'https://storage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg',
+    duration: '0:59',
   }
 ];
 
@@ -150,6 +156,41 @@ export const VideoProvider = ({ children }) => {
   const [activeVideo, setActiveVideo] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTag, setActiveTag] = useState('All');
+  const [activePage, setActivePage] = useState('home');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [history, setHistory] = useState([]);
+  
+  // Auth State (Defaulting to Tonix_aep7 to maintain current UI state until they log out)
+  const [user, setUser] = useState({ username: 'Tonix_aep7', handle: '@Tonix_aep7', avatar: 'T' });
+  const [registeredUsers, setRegisteredUsers] = useState([{ username: 'Tonix_aep7', password: 'password', handle: '@Tonix_aep7', avatar: 'T' }]);
+
+  const login = (username, password) => {
+    const existingUser = registeredUsers.find(u => u.username === username && u.password === password);
+    if (existingUser) {
+      setUser({ username: existingUser.username, handle: existingUser.handle, avatar: existingUser.avatar });
+      return { success: true };
+    }
+    return { success: false, message: 'Invalid username or password' };
+  };
+
+  const register = (username, password) => {
+    if (registeredUsers.some(u => u.username === username)) {
+      return { success: false, message: 'Username already exists' };
+    }
+    const newUser = { 
+      username, 
+      password, 
+      handle: `@${username.toLowerCase().replace(/\s+/g, '_')}`, 
+      avatar: username.charAt(0).toUpperCase() 
+    };
+    setRegisteredUsers([...registeredUsers, newUser]);
+    setUser({ username: newUser.username, handle: newUser.handle, avatar: newUser.avatar });
+    return { success: true };
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
   
   // Manage Subscriptions
   const [subscribedChannels, setSubscribedChannels] = useState(
@@ -159,6 +200,12 @@ export const VideoProvider = ({ children }) => {
   // Manage Likes/Dislikes
   const [likedVideos, setLikedVideos] = useState(new Set());
   const [dislikedVideos, setDislikedVideos] = useState(new Set());
+
+  // Watch history (simulated — use first 4 videos)
+  const [watchHistory] = useState(INITIAL_VIDEOS.slice(0, 4));
+
+  // Watch Later list
+  const [watchLater, setWatchLater] = useState([INITIAL_VIDEOS[2], INITIAL_VIDEOS[5]]);
 
   // Manage Comments dynamically
   const [comments, setComments] = useState(INITIAL_COMMENTS);
@@ -170,6 +217,30 @@ export const VideoProvider = ({ children }) => {
   const getFilteredVideos = () => {
     if (searchQuery === 'watch_later') {
       return videos.filter(video => watchLaterVideos.has(video.id));
+  const addToHistory = useCallback((item) => {
+    if (!item) return;
+    setHistory(prev => {
+      const next = prev.filter(v => v.id !== item.id);
+      return [{ ...item, isShort: !!item.videoUrl }, ...next];
+    });
+  }, []);
+
+  useEffect(() => {
+    if (activeVideo) {
+      addToHistory(activeVideo);
+    }
+  }, [activeVideo]);
+
+  // Filtered Video Selector
+  const getFilteredVideos = () => {
+    if (searchQuery === '__history__') {
+      return history;
+    }
+    if (searchQuery === '__liked__') {
+      return videos.filter(v => likedVideos.has(v.id));
+    }
+    if (searchQuery === '__watchlater__') {
+      return watchLater;
     }
     return videos.filter(video => {
       const matchesSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -303,6 +374,8 @@ export const VideoProvider = ({ children }) => {
       setSearchQuery,
       activeTag,
       setActiveTag,
+      activePage,
+      setActivePage,
       subscribedChannels,
       toggleSubscribe,
       likedVideos,
@@ -313,9 +386,19 @@ export const VideoProvider = ({ children }) => {
       addComment,
       watchLaterVideos,
       toggleWatchLater,
+      watchHistory,
+      watchLater,
+      setWatchLater,
       filteredVideos: getFilteredVideos(),
       shorts,
-      setShorts
+      setShorts,
+      addToHistory,
+      sidebarOpen,
+      setSidebarOpen,
+      user,
+      login,
+      register,
+      logout
     }}>
       {children}
     </VideoContext.Provider>

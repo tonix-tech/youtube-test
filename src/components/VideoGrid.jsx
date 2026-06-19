@@ -12,6 +12,12 @@ export default function VideoGrid() {
           <h3>No videos in Watch Later</h3>
           <p style={{ marginTop: '8px', color: '#aaaaaa', fontSize: '14px' }}>
             Click the clock icon on a video to save it for later.
+    if (searchQuery === '__history__') {
+      return (
+        <div className="no-results">
+          <h3>No watch history found</h3>
+          <p style={{ marginTop: '8px', color: '#aaaaaa', fontSize: '14px' }}>
+            Videos you watch will show up here.
           </p>
         </div>
       );

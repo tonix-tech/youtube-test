@@ -4,7 +4,10 @@ import Sidebar from './components/Sidebar';
 import TagsRow from './components/TagsRow';
 import VideoGrid from './components/VideoGrid';
 import VideoDetail from './components/VideoDetail';
+import Library from './components/Library';
+import Channel from './components/Channel';
 import Shorts from './components/Shorts';
+import AuthPage from './components/AuthPage';
 import { VideoProvider, useVideos } from './context/VideoContext';
 import { NotificationProvider } from './context/NotificationContext';
 import SubscriberNotification from './components/SubscriberNotification';
@@ -16,6 +19,11 @@ import './App.css';
 function MainLayout() {
   const { activeVideo, searchQuery } = useVideos();
   useSubscriberStream(); // Starts the mock stream
+  const { activeVideo, activePage, searchQuery } = useVideos();
+
+  if (activePage === 'auth') {
+    return <AuthPage />;
+  }
 
   return (
     <div className="app-container">
@@ -23,7 +31,11 @@ function MainLayout() {
       <div style={{ display: 'flex', flex: 1 }}>
         <Sidebar />
         <main className="main-wrapper" style={{ height: searchQuery === 'shorts' ? 'calc(100vh - 56px)' : 'auto', overflow: searchQuery === 'shorts' ? 'hidden' : 'auto' }}>
-          {activeVideo ? (
+          {activePage === 'library' ? (
+            <Library />
+          ) : activePage === 'channel' ? (
+            <Channel />
+          ) : activeVideo ? (
             <VideoDetail />
           ) : searchQuery === 'shorts' ? (
             <Shorts />
@@ -31,7 +43,7 @@ function MainLayout() {
             <NotificationsPage />
           ) : (
             <>
-              <TagsRow />
+              {!searchQuery.startsWith('__') && <TagsRow />}
               <div className="video-content-area">
                 <VideoGrid />
               </div>
