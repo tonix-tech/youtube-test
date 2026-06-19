@@ -5,12 +5,18 @@ import TagsRow from './components/TagsRow';
 import VideoGrid from './components/VideoGrid';
 import VideoDetail from './components/VideoDetail';
 import Library from './components/Library';
+import Channel from './components/Channel';
 import Shorts from './components/Shorts';
+import AuthPage from './components/AuthPage';
 import { VideoProvider, useVideos } from './context/VideoContext';
 import './App.css';
 
 function MainLayout() {
   const { activeVideo, activePage, searchQuery } = useVideos();
+
+  if (activePage === 'auth') {
+    return <AuthPage />;
+  }
 
   return (
     <div className="app-container">
@@ -20,6 +26,8 @@ function MainLayout() {
         <main className="main-wrapper" style={{ height: searchQuery === 'shorts' ? 'calc(100vh - 56px)' : 'auto', overflow: searchQuery === 'shorts' ? 'hidden' : 'auto' }}>
           {activePage === 'library' ? (
             <Library />
+          ) : activePage === 'channel' ? (
+            <Channel />
           ) : activeVideo ? (
             <VideoDetail />
           ) : searchQuery === 'shorts' ? (

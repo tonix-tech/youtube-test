@@ -159,6 +159,38 @@ export const VideoProvider = ({ children }) => {
   const [activePage, setActivePage] = useState('home');
   const [history, setHistory] = useState([]);
   
+  // Auth State (Defaulting to Tonix_aep7 to maintain current UI state until they log out)
+  const [user, setUser] = useState({ username: 'Tonix_aep7', handle: '@Tonix_aep7', avatar: 'T' });
+  const [registeredUsers, setRegisteredUsers] = useState([{ username: 'Tonix_aep7', password: 'password', handle: '@Tonix_aep7', avatar: 'T' }]);
+
+  const login = (username, password) => {
+    const existingUser = registeredUsers.find(u => u.username === username && u.password === password);
+    if (existingUser) {
+      setUser({ username: existingUser.username, handle: existingUser.handle, avatar: existingUser.avatar });
+      return { success: true };
+    }
+    return { success: false, message: 'Invalid username or password' };
+  };
+
+  const register = (username, password) => {
+    if (registeredUsers.some(u => u.username === username)) {
+      return { success: false, message: 'Username already exists' };
+    }
+    const newUser = { 
+      username, 
+      password, 
+      handle: `@${username.toLowerCase().replace(/\s+/g, '_')}`, 
+      avatar: username.charAt(0).toUpperCase() 
+    };
+    setRegisteredUsers([...registeredUsers, newUser]);
+    setUser({ username: newUser.username, handle: newUser.handle, avatar: newUser.avatar });
+    return { success: true };
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+  
   // Manage Subscriptions
   const [subscribedChannels, setSubscribedChannels] = useState(
     new Set(['Tom Scott', 'Mumbo Jumbo', 'Chain Bear', 'Lindybeige'])
@@ -331,7 +363,11 @@ export const VideoProvider = ({ children }) => {
       filteredVideos: getFilteredVideos(),
       shorts,
       setShorts,
-      addToHistory
+      addToHistory,
+      user,
+      login,
+      register,
+      logout
     }}>
       {children}
     </VideoContext.Provider>
