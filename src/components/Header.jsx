@@ -8,7 +8,7 @@ import {
 import { useVideos } from '../context/VideoContext';
 
 export default function Header() {
-  const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout } = useVideos();
+  const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout, sidebarOpen, setSidebarOpen } = useVideos();
   const [localSearch, setLocalSearch] = useState(searchQuery);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null);
@@ -54,7 +54,7 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-left">
-        <button className="menu-btn" aria-label="Main menu">
+        <button className="menu-btn" aria-label="Main menu" onClick={() => setSidebarOpen(!sidebarOpen)}>
           <Menu size={20} />
         </button>
         <a href="/" onClick={handleLogoClick} className="logo" id="logo-link">

@@ -34,7 +34,7 @@ function MainLayout() {
             <Shorts />
           ) : (
             <>
-              {searchQuery !== '__history__' && <TagsRow />}
+              {!searchQuery.startsWith('__') && <TagsRow />}
               <div className="video-content-area">
                 <VideoGrid />
               </div>

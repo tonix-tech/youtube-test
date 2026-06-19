@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 export const VideoContext = createContext();
 
@@ -157,6 +157,7 @@ export const VideoProvider = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTag, setActiveTag] = useState('All');
   const [activePage, setActivePage] = useState('home');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [history, setHistory] = useState([]);
   
   // Auth State (Defaulting to Tonix_aep7 to maintain current UI state until they log out)
@@ -209,13 +210,13 @@ export const VideoProvider = ({ children }) => {
   // Manage Comments dynamically
   const [comments, setComments] = useState(INITIAL_COMMENTS);
 
-  const addToHistory = (item) => {
+  const addToHistory = useCallback((item) => {
     if (!item) return;
     setHistory(prev => {
       const next = prev.filter(v => v.id !== item.id);
       return [{ ...item, isShort: !!item.videoUrl }, ...next];
     });
-  };
+  }, []);
 
   useEffect(() => {
     if (activeVideo) {
@@ -227,6 +228,12 @@ export const VideoProvider = ({ children }) => {
   const getFilteredVideos = () => {
     if (searchQuery === '__history__') {
       return history;
+    }
+    if (searchQuery === '__liked__') {
+      return videos.filter(v => likedVideos.has(v.id));
+    }
+    if (searchQuery === '__watchlater__') {
+      return watchLater;
     }
     return videos.filter(video => {
       const matchesSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -364,6 +371,8 @@ export const VideoProvider = ({ children }) => {
       shorts,
       setShorts,
       addToHistory,
+      sidebarOpen,
+      setSidebarOpen,
       user,
       login,
       register,
