@@ -353,8 +353,8 @@ body {
   width: 100%;
 }
 
-/* Sidebar Styles */
-.sidebar {
+/* Sidebar Styles - Mini (Collapsed) */
+.sidebar-mini {
   position: fixed;
   top: 56px;
   left: 0;
@@ -364,22 +364,21 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 12px 0;
+  padding: 4px 0;
   z-index: 900;
-  border-right: 1px solid var(--border-color);
   overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
 }
 
-.sidebar::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+.sidebar-mini::-webkit-scrollbar {
+  display: none;
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 4px;
+  gap: 0;
 }
 
 .sidebar-link {
@@ -388,13 +387,13 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 12px 4px;
+  padding: 16px 0 14px;
   color: var(--text-primary);
   text-decoration: none;
   font-size: 10px;
   text-align: center;
   gap: 6px;
-  border-radius: 8px;
+  border-radius: 0;
   cursor: pointer;
   background: none;
   border: none;
@@ -407,9 +406,174 @@ body {
 
 .sidebar-link.active {
   color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.1);
+  font-weight: 600;
 }
 
+/* Sidebar Overlay */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1100;
+  animation: overlayFadeIn 0.2s ease-out;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Sidebar Styles - Expanded (Full) */
+.sidebar-expanded {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 240px;
+  background-color: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  z-index: 1200;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #373737 transparent;
+  animation: sidebarSlideIn 0.2s ease-out;
+}
+
+.sidebar-expanded-header {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  height: 56px;
+  background-color: var(--bg-primary);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.sidebar-expanded::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar-expanded::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-expanded::-webkit-scrollbar-thumb {
+  background: #373737;
+  border-radius: 4px;
+}
+
+@keyframes sidebarSlideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.sidebar-nav-expanded {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 12px 0;
+}
+
+/* Expanded sidebar section */
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px 4px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.sidebar-section-header:hover {
+  color: var(--text-secondary);
+}
+
+.sidebar-expanded-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 12px 0;
+}
+
+/* Expanded sidebar link */
+.sidebar-expanded-link {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  padding: 8px 12px 8px 24px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  margin: 0 12px;
+  width: calc(100% - 24px);
+  transition: background-color 0.15s ease;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.sidebar-expanded-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-expanded-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+}
+
+/* Subscription channel items in expanded sidebar */
+.sidebar-expanded-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.sidebar-expanded-channel-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.sidebar-sub-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #3ea6ff;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.sidebar-sub-link {
+  gap: 16px;
+}
+
+.sidebar-show-more {
+  color: var(--text-secondary) !important;
+  gap: 24px;
+}
+
+/* Old sidebar classes for compatibility */
 .sidebar-divider {
   width: 40px;
   height: 1px;
