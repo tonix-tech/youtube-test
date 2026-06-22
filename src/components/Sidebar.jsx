@@ -81,28 +81,41 @@ export default function Sidebar() {
 
         <div className="sidebar-divider"></div>
 
-        <button className="sidebar-link" aria-label="Library">
+        <button 
+          onClick={() => { setActivePage('library'); setActiveVideo(null); }}
+          className={`sidebar-link ${activePage === 'library' ? 'active' : ''}`}
+          aria-label="Library"
+        >
           <Folder size={22} />
           <span>Library</span>
         </button>
 
-        <button className="sidebar-link" aria-label="History">
+        <button 
+          onClick={() => { setSearchQuery('__history__'); setActiveTag('All'); setActiveVideo(null); setActivePage('home'); }}
+          className={`sidebar-link ${searchQuery === '__history__' ? 'active' : ''}`}
+          aria-label="History"
+        >
           <History size={22} />
           <span>History</span>
         </button>
 
         <button 
-          onClick={() => { setSearchQuery('watch_later'); setActiveVideo(null); }}
-          className={`sidebar-link ${searchQuery === 'watch_later' ? 'active' : ''}`} 
+          onClick={() => { setSearchQuery('__watchlater__'); setActiveTag('All'); setActiveVideo(null); setActivePage('home'); }}
+          className={`sidebar-link ${searchQuery === '__watchlater__' ? 'active' : ''}`} 
           aria-label="Watch Later"
         >
           <Clock size={22} />
           <span>Watch Later</span>
         </button>
 
-        <button className="sidebar-link" aria-label="Liked Videos">
+        <button 
+          onClick={() => { setSearchQuery('__liked__'); setActiveTag('All'); setActiveVideo(null); setActivePage('home'); }}
+          className={`sidebar-link ${searchQuery === '__liked__' ? 'active' : ''}`}
+          aria-label="Liked Videos"
+        >
           <ThumbsUp size={22} />
           <span>Liked</span>
+        </button>
         <button 
           onClick={() => { setActivePage('library'); setActiveVideo(null); setSidebarOpen(false); }} 
           className={`sidebar-link ${activePage === 'library' ? 'active' : ''}`}

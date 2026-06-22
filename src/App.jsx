@@ -17,7 +17,6 @@ import { useSubscriberStream } from './hooks/useSubscriberStream';
 import './App.css';
 
 function MainLayout() {
-  const { activeVideo, searchQuery } = useVideos();
   useSubscriberStream(); // Starts the mock stream
   const { activeVideo, activePage, searchQuery } = useVideos();
 

@@ -6,13 +6,17 @@ export default function VideoGrid() {
   const { filteredVideos, searchQuery } = useVideos();
 
   if (filteredVideos.length === 0) {
-    if (searchQuery === 'watch_later') {
+    if (searchQuery === '__watchlater__' || searchQuery === 'watch_later') {
       return (
         <div className="no-results">
           <h3>No videos in Watch Later</h3>
           <p style={{ marginTop: '8px', color: '#aaaaaa', fontSize: '14px' }}>
             Click the clock icon on a video to save it for later.
-    if (searchQuery === '__history__') {
+          </p>
+        </div>
+      );
+    }
+    if (searchQuery === '__history__' || searchQuery === 'history') {
       return (
         <div className="no-results">
           <h3>No watch history found</h3>

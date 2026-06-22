@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, Search, Video, Grid, Bell } from 'lucide-react';
 import { 
   Menu, Search, Video, Grid, Bell, 
   ChevronRight, LogOut, PlaySquare, DollarSign, 
@@ -9,7 +8,7 @@ import {
 import { useVideos } from '../context/VideoContext';
 import { useNotification } from '../context/NotificationContext';
 export default function Header() {
-  const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag } = useVideos();
+  const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout, sidebarOpen, setSidebarOpen } = useVideos();
   const { notificationHistory, unreadCount, markAsRead, setSelectedSubscriber } = useNotification();
   const [localSearch, setLocalSearch] = useState(searchQuery);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -32,8 +31,7 @@ export default function Header() {
       markAsRead();
     }
   };
-  const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout, sidebarOpen, setSidebarOpen } = useVideos();
-  const [localSearch, setLocalSearch] = useState(searchQuery);
+
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null);
   const profileBtnRef = useRef(null);
@@ -118,15 +116,9 @@ export default function Header() {
           <Bell size={20} />
           {unreadCount > 0 && <span className="badge">{unreadCount > 9 ? '9+' : unreadCount}</span>}
         </button>
-        <div className="profile-avatar" title="Your Profile" id="profile-btn">
-          S
-        
         {user ? (
           <>
-            <button className="icon-btn" aria-label="Notifications">
-              <Bell size={20} />
-              <span className="badge">3</span>
-            </button>
+
             <div className="profile-wrapper">
               <div 
                 className="profile-avatar" 

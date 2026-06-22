@@ -198,7 +198,7 @@ export const VideoProvider = ({ children }) => {
   );
 
   // Manage Likes/Dislikes
-  const [likedVideos, setLikedVideos] = useState(new Set());
+  const [likedVideos, setLikedVideos] = useState(new Set([INITIAL_VIDEOS[0].id, INITIAL_VIDEOS[1].id, INITIAL_VIDEOS[3].id]));
   const [dislikedVideos, setDislikedVideos] = useState(new Set());
 
   // Watch history (simulated — use first 4 videos)
@@ -213,10 +213,6 @@ export const VideoProvider = ({ children }) => {
   // Manage Watch Later
   const [watchLaterVideos, setWatchLaterVideos] = useState(new Set());
 
-  // Filtered Video Selector
-  const getFilteredVideos = () => {
-    if (searchQuery === 'watch_later') {
-      return videos.filter(video => watchLaterVideos.has(video.id));
   const addToHistory = useCallback((item) => {
     if (!item) return;
     setHistory(prev => {
@@ -233,14 +229,17 @@ export const VideoProvider = ({ children }) => {
 
   // Filtered Video Selector
   const getFilteredVideos = () => {
-    if (searchQuery === '__history__') {
-      return history;
+    if (searchQuery === '__history__' || searchQuery === 'history') {
+      const historyIds = new Set(history.map(v => v.id));
+      const combinedHistory = [...history, ...watchHistory.filter(v => !historyIds.has(v.id))];
+      return combinedHistory;
     }
-    if (searchQuery === '__liked__') {
+    if (searchQuery === '__liked__' || searchQuery === 'liked') {
       return videos.filter(v => likedVideos.has(v.id));
     }
-    if (searchQuery === '__watchlater__') {
-      return watchLater;
+    if (searchQuery === '__watchlater__' || searchQuery === 'watch_later') {
+      const watchLaterIds = new Set([...watchLater.map(v => v.id), ...watchLaterVideos]);
+      return videos.filter(v => watchLaterIds.has(v.id));
     }
     return videos.filter(video => {
       const matchesSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

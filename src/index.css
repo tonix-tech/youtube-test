@@ -1249,6 +1249,11 @@ body {
 }
 
 .notification-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 /* ===== Library Page Styles ===== */
 .library-page {
   padding: 24px 32px;
@@ -1636,6 +1641,11 @@ body {
 }
 
 .notification-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
 .library-playlist-title {
   font-size: 14px;
   font-weight: 500;

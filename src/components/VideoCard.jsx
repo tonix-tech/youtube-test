@@ -3,8 +3,7 @@ import { Clock } from 'lucide-react';
 import { useVideos } from '../context/VideoContext';
 
 export default function VideoCard({ video }) {
-  const { setActiveVideo, watchLaterVideos, toggleWatchLater } = useVideos();
-  const { setActiveVideo, setSearchQuery } = useVideos();
+  const { setActiveVideo, watchLaterVideos, toggleWatchLater, setSearchQuery } = useVideos();
 
   const handleCardClick = () => {
     if (video.isShort) {
