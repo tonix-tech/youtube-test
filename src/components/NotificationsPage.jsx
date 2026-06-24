@@ -2,7 +2,7 @@ import React from 'react';
 import { useNotification } from '../context/NotificationContext';
 
 export default function NotificationsPage() {
-  const { notificationHistory, setSelectedSubscriber } = useNotification();
+  const { notificationHistory, setSelectedSubscriber, readNotifs, markItemAsRead } = useNotification();
 
   return (
     <div className="notifications-page" style={{ padding: '24px', maxWidth: '800px', margin: '0 auto' }}>
@@ -14,25 +14,35 @@ export default function NotificationsPage() {
         </div>
       ) : (
         <div className="notifications-container">
-          {notificationHistory.map(notif => (
+          {notificationHistory.map(notif => {
+            const isRead = readNotifs.includes(notif.id);
+            return (
             <div 
               key={notif.id} 
               className="notification-item-page"
-              onClick={() => setSelectedSubscriber(notif)}
+              onClick={() => {
+                markItemAsRead(notif.id);
+                setSelectedSubscriber(notif);
+              }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '16px',
                 padding: '16px',
-                backgroundColor: 'var(--bg-card)',
+                paddingLeft: isRead ? '16px' : '28px',
+                backgroundColor: isRead ? 'var(--bg-card)' : 'rgba(62, 166, 255, 0.08)',
                 borderRadius: '8px',
                 marginBottom: '12px',
                 cursor: 'pointer',
-                transition: 'background-color 0.2s'
+                transition: 'background-color 0.2s',
+                position: 'relative'
               }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-card-hover)'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-card)'}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = isRead ? 'var(--bg-card-hover)' : 'rgba(62, 166, 255, 0.12)'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = isRead ? 'var(--bg-card)' : 'rgba(62, 166, 255, 0.08)'}
             >
+              {!isRead && (
+                <div style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#3ea6ff' }} />
+              )}
               <img 
                 src={notif.profilePicture} 
                 alt="avatar" 
@@ -47,7 +57,7 @@ export default function NotificationsPage() {
                 </span>
               </div>
             </div>
-          ))}
+          )})}
         </div>
       )}
     </div>

@@ -16,7 +16,7 @@ export function useSubscriberStream() {
   useEffect(() => {
     // Start interval to simulate new subscribers randomly between 3 to 10 seconds
     const scheduleNext = () => {
-      const delay = Math.floor(Math.random() * 7000) + 3000;
+      const delay = Math.floor(Math.random() * 60000) + 120000;
       return setTimeout(() => {
         const randomSub = MOCK_SUBSCRIBERS[Math.floor(Math.random() * MOCK_SUBSCRIBERS.length)];
         triggerNotification(randomSub);
