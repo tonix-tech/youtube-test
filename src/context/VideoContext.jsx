@@ -150,9 +150,27 @@ const INITIAL_COMMENTS = {
   ]
 };
 
+import { supabase } from '../supabase';
+
 export const VideoProvider = ({ children }) => {
-  const [videos, setVideos] = useState(INITIAL_VIDEOS);
+  const [videos, setVideos] = useState([]);
   const [shorts, setShorts] = useState(INITIAL_SHORTS);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      if (!supabase) return;
+      try {
+        const { data, error } = await supabase.from('videos').select('*');
+        if (error) throw error;
+        if (data && data.length > 0) {
+          setVideos(data);
+        }
+      } catch (error) {
+        console.error('Error fetching videos from Supabase:', error);
+      }
+    };
+    fetchVideos();
+  }, []);
   const [activeVideo, setActiveVideo] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTag, setActiveTag] = useState('All');
@@ -193,19 +211,17 @@ export const VideoProvider = ({ children }) => {
   };
   
   // Manage Subscriptions
-  const [subscribedChannels, setSubscribedChannels] = useState(
-    new Set(['Tom Scott', 'Mumbo Jumbo', 'Chain Bear', 'Lindybeige'])
-  );
+  const [subscribedChannels, setSubscribedChannels] = useState(new Set());
 
   // Manage Likes/Dislikes
-  const [likedVideos, setLikedVideos] = useState(new Set([INITIAL_VIDEOS[0].id, INITIAL_VIDEOS[1].id, INITIAL_VIDEOS[3].id]));
+  const [likedVideos, setLikedVideos] = useState(new Set());
   const [dislikedVideos, setDislikedVideos] = useState(new Set());
 
-  // Watch history (simulated — use first 4 videos)
-  const [watchHistory] = useState(INITIAL_VIDEOS.slice(0, 4));
+  // Watch history (real dynamically generated history)
+  const [watchHistory] = useState([]);
 
   // Watch Later list
-  const [watchLater, setWatchLater] = useState([INITIAL_VIDEOS[2], INITIAL_VIDEOS[5]]);
+  const [watchLater, setWatchLater] = useState([]);
 
   // Manage Comments dynamically
   const [comments, setComments] = useState(INITIAL_COMMENTS);
