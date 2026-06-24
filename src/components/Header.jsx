@@ -8,11 +8,14 @@ import {
 import { useVideos } from '../context/VideoContext';
 import UploadModal from './UploadModal';
 
-export default function Header() {
-  const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout, isSidebarExpanded, setIsSidebarExpanded, showUploadModal, setShowUploadModal } = useVideos();
 import { useNotification } from '../context/NotificationContext';
+
 export default function Header() {
-  const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout, sidebarOpen, setSidebarOpen } = useVideos();
+  const { 
+    searchQuery, setSearchQuery, setActiveVideo, setActiveTag, 
+    setActivePage, user, logout, isSidebarExpanded, setIsSidebarExpanded, 
+    showUploadModal, setShowUploadModal, sidebarOpen, setSidebarOpen 
+  } = useVideos();
   const { notificationHistory, unreadCount, markAsRead, setSelectedSubscriber } = useNotification();
   const [localSearch, setLocalSearch] = useState(searchQuery);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -80,11 +83,6 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-left">
-        <button 
-          className="menu-btn" 
-          aria-label="Main menu"
-          onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
-        >
         <button className="menu-btn" aria-label="Main menu" onClick={() => setSidebarOpen(!sidebarOpen)}>
           <Menu size={20} />
         </button>

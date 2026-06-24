@@ -9,7 +9,7 @@ export default function Library() {
     likedVideos, 
     setActiveVideo, 
     setActivePage,
-    setShowUploadModal
+    setShowUploadModal,
     setSearchQuery,
     setActiveTag
   } = useVideos();

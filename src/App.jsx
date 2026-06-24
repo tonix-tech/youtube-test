@@ -20,7 +20,6 @@ import './App.css';
 function MainLayout() {
   const { activeVideo, activePage, searchQuery, isSidebarExpanded, showUploadModal, setShowUploadModal } = useVideos();
   useSubscriberStream(); // Starts the mock stream
-  const { activeVideo, activePage, searchQuery } = useVideos();
 
   if (activePage === 'auth') {
     return <AuthPage />;

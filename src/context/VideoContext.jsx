@@ -151,10 +151,9 @@ const INITIAL_COMMENTS = {
   ]
 };
 
-import { supabase } from '../supabase';
 
 export const VideoProvider = ({ children }) => {
-  const [videos, setVideos] = useState([]);
+  const [videos, setVideos] = useState(INITIAL_VIDEOS);
   const [shorts, setShorts] = useState(INITIAL_SHORTS);
 
   useEffect(() => {
@@ -300,7 +299,6 @@ export const VideoProvider = ({ children }) => {
     });
   };
 
-  const addToHistory = (item) => {
   // Manage Watch Later
   const [watchLaterVideos, setWatchLaterVideos] = useState(new Set());
 

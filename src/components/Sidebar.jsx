@@ -15,7 +15,7 @@ export default function Sidebar() {
     subscribedChannels,
     videos,
     isSidebarExpanded,
-    setShowUploadModal
+    setShowUploadModal,
     sidebarOpen,
     setSidebarOpen
   } = useVideos();
@@ -50,8 +50,7 @@ export default function Sidebar() {
 
   const subs = getSubscribedChannelDetails();
 
-  return (
-    <aside className={`sidebar ${isSidebarExpanded ? 'expanded' : ''}`}>
+
   // ===== MINI SIDEBAR (collapsed, always visible) =====
   const MiniSidebar = () => (
     <aside className="sidebar sidebar-mini">
@@ -113,7 +112,6 @@ export default function Sidebar() {
         </button>
 
         <button 
-          onClick={() => { setSearchQuery('__history__'); setActiveTag('All'); setActiveVideo(null); }}
           onClick={() => { setSearchQuery('__history__'); setActiveTag('All'); setActiveVideo(null); setActivePage('home'); }}
           className={`sidebar-link ${searchQuery === '__history__' ? 'active' : ''}`}
           aria-label="History"
@@ -123,8 +121,6 @@ export default function Sidebar() {
         </button>
 
         <button 
-          onClick={() => { setSearchQuery('__watch_later__'); setActiveTag('All'); setActiveVideo(null); setActivePage('home'); }}
-          className={`sidebar-link ${searchQuery === '__watch_later__' ? 'active' : ''}`}
           onClick={() => { setSearchQuery('__watchlater__'); setActiveTag('All'); setActiveVideo(null); setActivePage('home'); }}
           className={`sidebar-link ${searchQuery === '__watchlater__' ? 'active' : ''}`} 
           aria-label="Watch Later"
