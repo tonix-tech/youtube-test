@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { supabase } from '../supabase';
 
 export const VideoContext = createContext();
 
@@ -309,6 +310,25 @@ export const VideoProvider = ({ children }) => {
       const next = prev.filter(v => v.id !== item.id);
       return [{ ...item, isShort: !!item.videoUrl }, ...next];
     });
+
+    if (item.videoUrl) {
+      const logToSupabase = async () => {
+        try {
+          const { error } = await supabase.from('watched_shorts').insert([{
+            short_id: item.id,
+            title: item.title,
+            channel_name: item.channelName,
+            video_url: item.videoUrl,
+            thumbnail: item.thumbnail,
+            watched_at: new Date().toISOString()
+          }]);
+          if (error) console.error("Supabase insert error:", error);
+        } catch (err) {
+          console.error("Failed to log short to Supabase:", err);
+        }
+      };
+      logToSupabase();
+    }
   }, []);
 
   useEffect(() => {
