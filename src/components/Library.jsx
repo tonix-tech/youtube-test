@@ -8,7 +8,8 @@ export default function Library() {
     videos, 
     likedVideos, 
     setActiveVideo, 
-    setActivePage 
+    setActivePage,
+    setShowUploadModal
   } = useVideos();
 
   const historyScrollRef = useRef(null);
@@ -55,6 +56,13 @@ export default function Library() {
             </a>
           </div>
           <div className="library-profile-actions">
+            <button className="library-profile-btn" onClick={() => setShowUploadModal(true)} style={{ backgroundColor: 'var(--text-primary)', color: 'var(--bg-primary)' }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Upload Video
+            </button>
             <button className="library-profile-btn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>

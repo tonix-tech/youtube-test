@@ -6,9 +6,10 @@ import {
   Keyboard, Settings, HelpCircle, MessageSquareWarning, UserCircle
 } from 'lucide-react';
 import { useVideos } from '../context/VideoContext';
+import UploadModal from './UploadModal';
 
 export default function Header() {
-  const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout } = useVideos();
+  const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout, isSidebarExpanded, setIsSidebarExpanded, showUploadModal, setShowUploadModal } = useVideos();
   const [localSearch, setLocalSearch] = useState(searchQuery);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null);
@@ -54,7 +55,11 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-left">
-        <button className="menu-btn" aria-label="Main menu">
+        <button 
+          className="menu-btn" 
+          aria-label="Main menu"
+          onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
+        >
           <Menu size={20} />
         </button>
         <a href="/" onClick={handleLogoClick} className="logo" id="logo-link">
@@ -84,7 +89,11 @@ export default function Header() {
       </div>
 
       <div className="header-right">
-        <button className="icon-btn" aria-label="Create video">
+        <button 
+          className="icon-btn" 
+          aria-label="Create video"
+          onClick={() => setShowUploadModal(true)}
+        >
           <Video size={20} />
         </button>
         <button className="icon-btn" aria-label="YouTube apps">

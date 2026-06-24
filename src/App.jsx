@@ -8,11 +8,12 @@ import Library from './components/Library';
 import Channel from './components/Channel';
 import Shorts from './components/Shorts';
 import AuthPage from './components/AuthPage';
+import UploadModal from './components/UploadModal';
 import { VideoProvider, useVideos } from './context/VideoContext';
 import './App.css';
 
 function MainLayout() {
-  const { activeVideo, activePage, searchQuery } = useVideos();
+  const { activeVideo, activePage, searchQuery, isSidebarExpanded, showUploadModal, setShowUploadModal } = useVideos();
 
   if (activePage === 'auth') {
     return <AuthPage />;
@@ -23,7 +24,7 @@ function MainLayout() {
       <Header />
       <div style={{ display: 'flex', flex: 1 }}>
         <Sidebar />
-        <main className="main-wrapper" style={{ height: searchQuery === 'shorts' ? 'calc(100vh - 56px)' : 'auto', overflow: searchQuery === 'shorts' ? 'hidden' : 'auto' }}>
+        <main className={`main-wrapper ${isSidebarExpanded ? 'sidebar-expanded' : ''}`} style={{ height: searchQuery === 'shorts' ? 'calc(100vh - 56px)' : 'auto', overflow: searchQuery === 'shorts' ? 'hidden' : 'auto' }}>
           {activePage === 'library' ? (
             <Library />
           ) : activePage === 'channel' ? (
@@ -42,6 +43,11 @@ function MainLayout() {
           )}
         </main>
       </div>
+
+      <UploadModal 
+        isOpen={showUploadModal} 
+        onClose={() => setShowUploadModal(false)} 
+      />
     </div>
   );
 }
