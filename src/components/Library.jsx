@@ -10,6 +10,8 @@ export default function Library() {
     setActiveVideo, 
     setActivePage,
     setShowUploadModal
+    setSearchQuery,
+    setActiveTag
   } = useVideos();
 
   const historyScrollRef = useRef(null);
@@ -89,7 +91,7 @@ export default function Library() {
         <div className="library-section-header">
           <h2 className="library-section-title">History</h2>
           <div className="library-section-controls">
-            <button className="library-view-all-btn">View all</button>
+            <button className="library-view-all-btn" onClick={() => { setSearchQuery('__history__'); setActiveTag('All'); setActiveVideo(null); setActivePage('home'); }}>View all</button>
             <button 
               className="library-scroll-btn"
               onClick={() => scrollContainer(historyScrollRef, 'left')}
@@ -170,7 +172,7 @@ export default function Library() {
         </div>
         <div className="library-horizontal-scroll" ref={playlistScrollRef}>
           {/* Liked Videos Playlist Card */}
-          <div className="library-playlist-card">
+          <div className="library-playlist-card" onClick={() => { setSearchQuery('__liked__'); setActiveTag('All'); setActiveVideo(null); setActivePage('home'); }}>
             <div className="library-playlist-thumb">
               {likedVideosList.length > 0 ? (
                 <img 
@@ -204,7 +206,7 @@ export default function Library() {
           </div>
 
           {/* Watch Later Playlist Card */}
-          <div className="library-playlist-card">
+          <div className="library-playlist-card" onClick={() => { setSearchQuery('__watchlater__'); setActiveTag('All'); setActiveVideo(null); setActivePage('home'); }}>
             <div className="library-playlist-thumb">
               {videos.length > 3 ? (
                 <img 

@@ -10,7 +10,32 @@ import UploadModal from './UploadModal';
 
 export default function Header() {
   const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout, isSidebarExpanded, setIsSidebarExpanded, showUploadModal, setShowUploadModal } = useVideos();
+import { useNotification } from '../context/NotificationContext';
+export default function Header() {
+  const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout, sidebarOpen, setSidebarOpen } = useVideos();
+  const { notificationHistory, unreadCount, markAsRead, setSelectedSubscriber } = useNotification();
   const [localSearch, setLocalSearch] = useState(searchQuery);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const notifRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setIsNotifOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleNotifClick = () => {
+    setSearchQuery('notifications');
+    setActiveVideo(null);
+    if (unreadCount > 0) {
+      markAsRead();
+    }
+  };
+
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef(null);
   const profileBtnRef = useRef(null);
@@ -60,6 +85,7 @@ export default function Header() {
           aria-label="Main menu"
           onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
         >
+        <button className="menu-btn" aria-label="Main menu" onClick={() => setSidebarOpen(!sidebarOpen)}>
           <Menu size={20} />
         </button>
         <a href="/" onClick={handleLogoClick} className="logo" id="logo-link">
@@ -99,13 +125,13 @@ export default function Header() {
         <button className="icon-btn" aria-label="YouTube apps">
           <Grid size={20} />
         </button>
-        
+        <button className="icon-btn" aria-label="Notifications" onClick={handleNotifClick}>
+          <Bell size={20} />
+          {unreadCount > 0 && <span className="badge">{unreadCount > 9 ? '9+' : unreadCount}</span>}
+        </button>
         {user ? (
           <>
-            <button className="icon-btn" aria-label="Notifications">
-              <Bell size={20} />
-              <span className="badge">3</span>
-            </button>
+
             <div className="profile-wrapper">
               <div 
                 className="profile-avatar" 

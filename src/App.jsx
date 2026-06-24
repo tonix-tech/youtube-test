@@ -10,10 +10,17 @@ import Shorts from './components/Shorts';
 import AuthPage from './components/AuthPage';
 import UploadModal from './components/UploadModal';
 import { VideoProvider, useVideos } from './context/VideoContext';
+import { NotificationProvider } from './context/NotificationContext';
+import SubscriberNotification from './components/SubscriberNotification';
+import SubscriberModal from './components/SubscriberModal';
+import NotificationsPage from './components/NotificationsPage';
+import { useSubscriberStream } from './hooks/useSubscriberStream';
 import './App.css';
 
 function MainLayout() {
   const { activeVideo, activePage, searchQuery, isSidebarExpanded, showUploadModal, setShowUploadModal } = useVideos();
+  useSubscriberStream(); // Starts the mock stream
+  const { activeVideo, activePage, searchQuery } = useVideos();
 
   if (activePage === 'auth') {
     return <AuthPage />;
@@ -33,9 +40,11 @@ function MainLayout() {
             <VideoDetail />
           ) : searchQuery === 'shorts' ? (
             <Shorts />
+          ) : searchQuery === 'notifications' ? (
+            <NotificationsPage />
           ) : (
             <>
-              {searchQuery !== '__history__' && <TagsRow />}
+              {!searchQuery.startsWith('__') && <TagsRow />}
               <div className="video-content-area">
                 <VideoGrid />
               </div>
@@ -55,7 +64,11 @@ function MainLayout() {
 function App() {
   return (
     <VideoProvider>
-      <MainLayout />
+      <NotificationProvider>
+        <MainLayout />
+        <SubscriberNotification />
+        <SubscriberModal />
+      </NotificationProvider>
     </VideoProvider>
   );
 }
