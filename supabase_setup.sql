@@ -1,4 +1,5 @@
 -- Create a table for videos
+CREATE TABLE IF NOT EXISTS videos (
 CREATE TABLE videos (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
@@ -21,6 +22,12 @@ INSERT INTO videos (id, title, duration, thumbnail, "channelName", "channelAvata
 ('oBt53YbR9Kk', 'Dynamic Programming Intermediate Course', '5:10:02', 'https://img.youtube.com/vi/oBt53YbR9Kk/maxresdefault.jpg', 'freeCodeCamp', 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&h=100&q=80', '3.6M views', '4 months ago', 180000, 'Python', 'An in-depth, interactive course on dynamic programming. Master memoization and tabulation techniques with practical algorithmic examples.'),
 ('r5pFyBHO8Fk', 'F1 Aerodynamics - 2: Turbulence, Drag & Vortices', '8:55', 'https://img.youtube.com/vi/r5pFyBHO8Fk/maxresdefault.jpg', 'Chain Bear', 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=100&h=100&q=80', '890K views', '3 years ago', 32000, 'Formula 1', 'What is turbulence and how does it affect the drag on a Formula 1 car? Stuart Taylor explains drag, wake, and aerodynamic design in F1.'),
 ('nej-5GhPqtw', 'How GOTYE created a song we used to know', '10:49', 'https://img.youtube.com/vi/nej-5GhPqtw/maxresdefault.jpg', 'Middle 8', 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=100&h=100&q=80', '920K views', '6 months ago', 62000, 'Software Design', 'An analysis of Gotyes mega-hit "Somebody That I Used To Know", its composition, the sample usage, and why it became an international phenomenon.'),
+('RzWB5jL5RX0', 'Cracking Enigma in 2021', '22:15', 'https://img.youtube.com/vi/RzWB5jL5RX0/maxresdefault.jpg', 'Computerphile', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80', '1.1M views', '2 years ago', 71000, 'Java', 'Can we crack the famous German Enigma machine in seconds using modern computers? Mike Pound shows how the code works and writes a crack script.')
+ON CONFLICT (id) DO NOTHING;
+
+-- Allow read access to all users
+ALTER TABLE videos ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Enable read access for all users" ON "public"."videos";
 ('RzWB5jL5RX0', 'Cracking Enigma in 2021', '22:15', 'https://img.youtube.com/vi/RzWB5jL5RX0/maxresdefault.jpg', 'Computerphile', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80', '1.1M views', '2 years ago', 71000, 'Java', 'Can we crack the famous German Enigma machine in seconds using modern computers? Mike Pound shows how the code works and writes a crack script.');
 
 -- Allow read access to all users
