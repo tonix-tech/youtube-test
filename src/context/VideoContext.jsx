@@ -177,36 +177,70 @@ export const VideoProvider = ({ children }) => {
   const [activePage, setActivePage] = useState('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [history, setHistory] = useState([]);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
   
-  // Auth State (Defaulting to Tonix_aep7 to maintain current UI state until they log out)
-  const [user, setUser] = useState({ username: 'Tonix_aep7', handle: '@Tonix_aep7', avatar: 'T' });
-  const [registeredUsers, setRegisteredUsers] = useState([{ username: 'Tonix_aep7', password: 'password', handle: '@Tonix_aep7', avatar: 'T' }]);
+  // Auth State
+  const [user, setUser] = useState(null);
 
-  const login = (username, password) => {
-    const existingUser = registeredUsers.find(u => u.username === username && u.password === password);
-    if (existingUser) {
-      setUser({ username: existingUser.username, handle: existingUser.handle, avatar: existingUser.avatar });
-      return { success: true };
-    }
-    return { success: false, message: 'Invalid username or password' };
-  };
+  useEffect(() => {
+    if (!supabase) return;
 
-  const register = (username, password) => {
-    if (registeredUsers.some(u => u.username === username)) {
-      return { success: false, message: 'Username already exists' };
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser({
+          username: session.user.email.split('@')[0],
+          handle: `@${session.user.email.split('@')[0]}`,
+          avatar: session.user.email.charAt(0).toUpperCase()
+        });
+      }
+    });
+
+    // Listen for changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser({
+          username: session.user.email.split('@')[0],
+          handle: `@${session.user.email.split('@')[0]}`,
+          avatar: session.user.email.charAt(0).toUpperCase()
+        });
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const login = async (email, password) => {
+    if (!supabase) return { success: false, message: 'Supabase not configured' };
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      return { success: false, message: error.message };
     }
-    const newUser = { 
-      username, 
-      password, 
-      handle: `@${username.toLowerCase().replace(/\s+/g, '_')}`, 
-      avatar: username.charAt(0).toUpperCase() 
-    };
-    setRegisteredUsers([...registeredUsers, newUser]);
-    setUser({ username: newUser.username, handle: newUser.handle, avatar: newUser.avatar });
     return { success: true };
   };
 
-  const logout = () => {
+  const register = async (email, password) => {
+    if (!supabase) return { success: false, message: 'Supabase not configured' };
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (error) {
+      return { success: false, message: error.message };
+    }
+    return { success: true };
+  };
+
+  const logout = async () => {
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
     setUser(null);
   };
   
@@ -226,6 +260,46 @@ export const VideoProvider = ({ children }) => {
   // Manage Comments dynamically
   const [comments, setComments] = useState(INITIAL_COMMENTS);
 
+  const addVideo = (videoData) => {
+    const newVideo = {
+      id: Math.random().toString(36).substr(2, 9),
+      title: videoData.title,
+      thumbnail: videoData.thumbnail || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80',
+      channelName: user.username,
+      channelAvatar: user.avatar,
+      views: '0 views',
+      timestamp: 'Just now',
+      duration: '0:00',
+      category: 'All',
+      videoUrl: videoData.videoUrl || ''
+    };
+    
+    // Insert new video in the middle of the list
+    setVideos(prev => {
+      const middleIndex = Math.floor(prev.length / 2);
+      return [...prev.slice(0, middleIndex), newVideo, ...prev.slice(middleIndex)];
+    });
+  };
+
+  const addShort = (shortData) => {
+    const newShort = {
+      id: Math.random().toString(36).substr(2, 9),
+      title: shortData.title,
+      thumbnail: shortData.thumbnail || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300&q=80',
+      views: '0 views',
+      videoUrl: shortData.videoUrl || '',
+      commentsCount: 0,
+      duration: '0:15',
+    };
+    
+    // Insert new short in the middle of the list
+    setShorts(prev => {
+      const middleIndex = Math.floor(prev.length / 2);
+      return [...prev.slice(0, middleIndex), newShort, ...prev.slice(middleIndex)];
+    });
+  };
+
+  const addToHistory = (item) => {
   // Manage Watch Later
   const [watchLaterVideos, setWatchLaterVideos] = useState(new Set());
 
@@ -257,6 +331,13 @@ export const VideoProvider = ({ children }) => {
       const watchLaterIds = new Set([...watchLater.map(v => v.id), ...watchLaterVideos]);
       return videos.filter(v => watchLaterIds.has(v.id));
     }
+    if (searchQuery === '__watch_later__') {
+      return watchLater;
+    }
+    if (searchQuery === '__liked__') {
+      return videos.filter(v => likedVideos.has(v.id));
+    }
+    
     return videos.filter(video => {
       const matchesSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             video.channelName.toLowerCase().includes(searchQuery.toLowerCase());
@@ -413,7 +494,13 @@ export const VideoProvider = ({ children }) => {
       user,
       login,
       register,
-      logout
+      logout,
+      addVideo,
+      addShort,
+      isSidebarExpanded,
+      setIsSidebarExpanded,
+      showUploadModal,
+      setShowUploadModal
     }}>
       {children}
     </VideoContext.Provider>

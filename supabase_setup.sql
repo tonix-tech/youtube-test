@@ -1,5 +1,6 @@
 -- Create a table for videos
 CREATE TABLE IF NOT EXISTS videos (
+CREATE TABLE videos (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
   duration TEXT,
@@ -27,4 +28,8 @@ ON CONFLICT (id) DO NOTHING;
 -- Allow read access to all users
 ALTER TABLE videos ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Enable read access for all users" ON "public"."videos";
+('RzWB5jL5RX0', 'Cracking Enigma in 2021', '22:15', 'https://img.youtube.com/vi/RzWB5jL5RX0/maxresdefault.jpg', 'Computerphile', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80', '1.1M views', '2 years ago', 71000, 'Java', 'Can we crack the famous German Enigma machine in seconds using modern computers? Mike Pound shows how the code works and writes a crack script.');
+
+-- Allow read access to all users
+ALTER TABLE videos ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Enable read access for all users" ON "public"."videos" AS PERMISSIVE FOR SELECT TO public USING (true);

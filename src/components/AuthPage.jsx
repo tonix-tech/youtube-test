@@ -5,28 +5,28 @@ import './AuthPage.css'; // Optional: we can put styles in index.css
 export default function AuthPage() {
   const { login, register, setActivePage } = useVideos();
   const [isLoginView, setIsLoginView] = useState(true);
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
-    if (!username.trim() || !password.trim()) {
+    if (!email.trim() || !password.trim()) {
       setError('Please fill in all fields');
       return;
     }
 
     if (isLoginView) {
-      const result = login(username, password);
+      const result = await login(email, password);
       if (result.success) {
         setActivePage('home');
       } else {
         setError(result.message);
       }
     } else {
-      const result = register(username, password);
+      const result = await register(email, password);
       if (result.success) {
         setActivePage('home');
       } else {
@@ -51,10 +51,10 @@ export default function AuthPage() {
           
           <div className="auth-input-group">
             <input 
-              type="text" 
-              placeholder="Username" 
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email" 
+              placeholder="Email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="auth-input"
             />
           </div>
@@ -78,7 +78,7 @@ export default function AuthPage() {
             <button 
               type="button" 
               className="auth-toggle-btn" 
-              onClick={() => { setIsLoginView(!isLoginView); setError(''); setUsername(''); setPassword(''); }}
+              onClick={() => { setIsLoginView(!isLoginView); setError(''); setEmail(''); setPassword(''); }}
             >
               {isLoginView ? 'Create account' : 'Sign in instead'}
             </button>
