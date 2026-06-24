@@ -150,9 +150,27 @@ const INITIAL_COMMENTS = {
   ]
 };
 
+import { supabase } from '../supabase';
+
 export const VideoProvider = ({ children }) => {
   const [videos, setVideos] = useState(INITIAL_VIDEOS);
   const [shorts, setShorts] = useState(INITIAL_SHORTS);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      if (!supabase) return;
+      try {
+        const { data, error } = await supabase.from('videos').select('*');
+        if (error) throw error;
+        if (data && data.length > 0) {
+          setVideos(data);
+        }
+      } catch (error) {
+        console.error('Error fetching videos from Supabase:', error);
+      }
+    };
+    fetchVideos();
+  }, []);
   const [activeVideo, setActiveVideo] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTag, setActiveTag] = useState('All');
@@ -160,35 +178,67 @@ export const VideoProvider = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [history, setHistory] = useState([]);
   
-  // Auth State (Defaulting to Tonix_aep7 to maintain current UI state until they log out)
-  const [user, setUser] = useState({ username: 'Tonix_aep7', handle: '@Tonix_aep7', avatar: 'T' });
-  const [registeredUsers, setRegisteredUsers] = useState([{ username: 'Tonix_aep7', password: 'password', handle: '@Tonix_aep7', avatar: 'T' }]);
+  // Auth State
+  const [user, setUser] = useState(null);
 
-  const login = (username, password) => {
-    const existingUser = registeredUsers.find(u => u.username === username && u.password === password);
-    if (existingUser) {
-      setUser({ username: existingUser.username, handle: existingUser.handle, avatar: existingUser.avatar });
-      return { success: true };
-    }
-    return { success: false, message: 'Invalid username or password' };
-  };
+  useEffect(() => {
+    if (!supabase) return;
 
-  const register = (username, password) => {
-    if (registeredUsers.some(u => u.username === username)) {
-      return { success: false, message: 'Username already exists' };
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser({
+          username: session.user.email.split('@')[0],
+          handle: `@${session.user.email.split('@')[0]}`,
+          avatar: session.user.email.charAt(0).toUpperCase()
+        });
+      }
+    });
+
+    // Listen for changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser({
+          username: session.user.email.split('@')[0],
+          handle: `@${session.user.email.split('@')[0]}`,
+          avatar: session.user.email.charAt(0).toUpperCase()
+        });
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const login = async (email, password) => {
+    if (!supabase) return { success: false, message: 'Supabase not configured' };
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      return { success: false, message: error.message };
     }
-    const newUser = { 
-      username, 
-      password, 
-      handle: `@${username.toLowerCase().replace(/\s+/g, '_')}`, 
-      avatar: username.charAt(0).toUpperCase() 
-    };
-    setRegisteredUsers([...registeredUsers, newUser]);
-    setUser({ username: newUser.username, handle: newUser.handle, avatar: newUser.avatar });
     return { success: true };
   };
 
-  const logout = () => {
+  const register = async (email, password) => {
+    if (!supabase) return { success: false, message: 'Supabase not configured' };
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (error) {
+      return { success: false, message: error.message };
+    }
+    return { success: true };
+  };
+
+  const logout = async () => {
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
     setUser(null);
   };
   
