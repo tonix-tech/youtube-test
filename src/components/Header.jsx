@@ -6,6 +6,10 @@ import {
   Keyboard, Settings, HelpCircle, MessageSquareWarning, UserCircle
 } from 'lucide-react';
 import { useVideos } from '../context/VideoContext';
+import UploadModal from './UploadModal';
+
+export default function Header() {
+  const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout, isSidebarExpanded, setIsSidebarExpanded, showUploadModal, setShowUploadModal } = useVideos();
 import { useNotification } from '../context/NotificationContext';
 export default function Header() {
   const { searchQuery, setSearchQuery, setActiveVideo, setActiveTag, setActivePage, user, logout, sidebarOpen, setSidebarOpen } = useVideos();
@@ -76,6 +80,11 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-left">
+        <button 
+          className="menu-btn" 
+          aria-label="Main menu"
+          onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
+        >
         <button className="menu-btn" aria-label="Main menu" onClick={() => setSidebarOpen(!sidebarOpen)}>
           <Menu size={20} />
         </button>
@@ -106,7 +115,11 @@ export default function Header() {
       </div>
 
       <div className="header-right">
-        <button className="icon-btn" aria-label="Create video">
+        <button 
+          className="icon-btn" 
+          aria-label="Create video"
+          onClick={() => setShowUploadModal(true)}
+        >
           <Video size={20} />
         </button>
         <button className="icon-btn" aria-label="YouTube apps">
